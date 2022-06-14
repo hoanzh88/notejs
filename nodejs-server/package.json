@@ -1,0 +1,14 @@
+{
+  "name": "nodejs-server",
+  "version": "1.0.0",
+  "description": "t�est",
+  "main": "index.js",
+  "scripts": {
+    "test": "t�est"
+  },
+  "keywords": [
+    "node"
+  ],
+  "author": "hoan",
+  "license": "ISC"
+}
