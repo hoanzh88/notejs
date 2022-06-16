@@ -110,6 +110,108 @@ http://localhost:3000/admin
 http://localhost:3000/blog
 ```
 
+### Connect Mysql
+Config Mysql
+\config\default.json
+```
+"mysql":{
+		"host": "localhost",
+		"port": 3306,
+		"database": "blog",
+		"user": "root",
+		"password": ""
+	},
+```
 
+Tạo folder common để chứa các những file chung chung
 
+\apps\common\database.js
+```
+var config = require("config");
+var mysql = require("mysql");
 
+const connection = mysql.createConnection({
+	host: config.get("mysql.host"),
+	user: config.get("mysql.user"),
+	password: config.get("mysql.password"),
+	database: config.get("mysql.database")
+});
+
+connection.connect(function(err){
+	if (err){
+		console.log(err);
+		console.log("ket noi CSDL that bai");
+	}else{
+		console.log("ket noi CSDL thanh cong");
+	}
+});
+
+function getConnection (){
+	if(!connection){
+		connection.connect();
+	}
+	return connection;
+}
+
+module.exports = {
+	getConnection:getConnection
+}
+```
+
+\apps\models\users.js
+```
+var db = require("../common/database.js");
+var conn = db.getConnection();
+
+function getAllUsers(){
+    return new Promise (function(resole, reject){
+            let query = conn.query('SELECT * FROM users', function(err, users){
+                if (err){
+                    reject(err);
+                }else{
+                    resole(users);
+                }
+            });
+        });
+}
+
+const user_model = {};
+user_model.getAllUsers = getAllUsers;
+
+module.exports = user_model;
+```
+
+\apps\controllers\index.js
+```
+const user_model = require("../models/users");
+
+router.get("/getallusers", function(req, res){
+	let promise_user = user_model.getAllUsers();
+
+	promise_user.then(function(users){
+		res.json({
+			"message":"this is list_user page",
+			"users":users
+		});
+	}).catch(function(err){
+		res.json({
+			message: "Loi roi"
+		});
+	});
+});
+```
+
+Tạo table users & insert data để test
+```
+CREATE TABLE `users` (
+  `id` INT(11) NOT NULL,
+  `email` VARCHAR(45) NOT NULL,
+  `password` VARCHAR(45) NOT NULL,
+  `first_name` VARCHAR(45) DEFAULT NULL,
+  `last_name` VARCHAR(45) DEFAULT NULL,
+  `created_at` DATETIME NOT NULL,
+  `updated_at` DATETIME NOT NULL
+) ENGINE=INNODB DEFAULT CHARSET=latin1;
+```
+
+Test thử: http://localhost:3000/getallusers
