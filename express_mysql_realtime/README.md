@@ -544,5 +544,90 @@ router.get("/signin", function(req, res){
 ```
 
 Test thử http://localhost:3000/admin/signin
+Config express-session
+\app.js
+```
+var session = require("express-session");
+
+// cau hinh session sau bodyParser
+app.set('trust proxy', 1) // trust first proxy
+app.use(session({
+  secret: config.get("secret_key"),
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false }
+}));
+```
+
+\apps\controllers\admin.js
+```
+router.post("/signin", function(req, res){
+	var params = req.body; // lấy data từ form bắn lên từ views
+
+	// Nếu không nhập email thì báo lỗi
+	if (params.email.trim().length == 0){
+		res.render("signin.ejs", {data: {error: "Please enter email"}});
+
+	// Nếu có email rồi thì chuyền email này vào model để lấy toàn bộ thông tin user trong DB
+	// sau đó so sánh password mới nhập với password được lưu trong DB. nếu khớp thì ok.
+	}else{
+		var data = user_md.getUserByEmail(params.email); // Hàm lấy thông tin user ra bằng email
+
+		if (data){
+			data.then(function(users){
+				let user = users[0];
+				
+				// So sánh password được lấy từ view với password được lưu trong DB
+				let status = helper.compare_password(params.password, user.password);
+				console.log(status);
+				if(!status){
+					res.render("signin.ejs", {data: {error: "password is incorrect"}});
+				}else{
+					req.session.user = user;
+					console.log(req.session.user);
+					res.redirect("/admin");
+				}
+			});
+
+		}else{
+			res.render("signin.ejs", {data: {error: "Email not exists"}});
+		}
+	}
+});
+```
+
+\apps\models\users.js
+```
+function getUserByEmail(email){
+    if (email){
+        return new Promise (function(resole, reject){
+            let query = conn.query('SELECT * FROM users WHERE ?', {email: email}, function(err, results, fields){
+                if (err){
+                    reject(err);
+                }else{
+                    resole(results);
+                }
+            });
+        });
+    }else{
+        return false
+    }
+}
+
+user_model.getUserByEmail = getUserByEmail;
+```
+
+\apps\helpers\helper.js
+```
+function compare_password(password, hash){
+	// return true
+	bcrypt.compareSync(password, hash); // return true neu hash chua password, va return false neu khong chua password
+}
+
+compare_password: compare_password
+```
+
+Test thử login http://localhost:3000/admin/signin
+
 
 

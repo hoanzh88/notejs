@@ -50,4 +50,34 @@ router.get("/signin", function(req, res){
 	res.render("signin.ejs", {data: {}});
 });
 
+router.post("/signin", function(req, res){
+	var params = req.body; // lấy data từ form
+
+	if (params.email.trim().length == 0){
+		res.render("signin.ejs", {data: {error: "Please enter email"}});
+	}else{
+		var data = user_model.getUserByEmail(params.email);
+
+		if (data){
+			data.then(function(users){
+				let user = users[0];				
+				// So sánh password được lấy từ view với password được lưu trong DB
+				let status = helper.compare_password(params.password, user.password);
+				console.log(status);
+				if(!status){
+					res.render("signin.ejs", {data: {error: "password is incorrect"}});
+				}else{
+					req.session.user = user;
+					console.log(req.session.user);
+					res.redirect("/admin");
+				}
+			});
+
+		}else{
+			res.render("signin.ejs", {data: {error: "Email not exists"}});
+		}
+	}
+});
+
+
 module.exports = router;
