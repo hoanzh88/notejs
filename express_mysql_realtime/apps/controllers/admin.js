@@ -6,8 +6,13 @@ const user_model = require("../models/users");
 var helper = require("../helpers/helper.js");
 
 router.get("/", function(req, res){
-	res.json({"message":"this is admin page"});
+	if (req.session.user){
+			res.render("admin/dashboard.ejs", {});	
+	}else{
+		res.redirect("/admin/signin")
+	}	
 });
+
 
 // SIGNUP
 router.get("/signup", function(req, res){

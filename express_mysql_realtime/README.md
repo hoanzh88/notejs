@@ -629,5 +629,109 @@ compare_password: compare_password
 
 Test thử login http://localhost:3000/admin/signin
 
+### posts
+
+Tạo table posts
+```
+CREATE TABLE `posts` (
+  `id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `content` mediumtext,
+  `author` varchar(255) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+```
+
+Dùng router index của admin là trang dashboard
+\apps\controllers\admin.js
+```
+router.get("/", function(req, res){
+	if (req.session.user){
+			res.render("admin/dashboard.ejs", {data: {}});	
+	}else{
+		res.redirect("/admin/signin")
+	}	
+});
+```
+
+\apps\views\admin\dashboard.ejs
+```
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<%- include('layout/head.ejs') %>
+</head>
+<body>
+	<%- include('layout/nav.ejs') %>
+	<div class="row" style="margin-bottom: 10px">
+		<div class="col-md-12">
+			<a href="/admin/post/new" class="btn btn-success pull-right">Add new Post</a>
+		</div>
+	</div>
+
+	<div class="panel panel-default">
+	    <div class="panel-heading">
+	        Post
+	    </div>
+	    <!-- /.panel-heading -->
+	    <div class="panel-body">
+	        <div class="table-responsive">
+	            <table class="table table-striped table-bordered table-hover">
+	                <thead>
+	                    <tr>
+	                        <th>ID</th>
+	                        <th>Title</th>
+	                        <th>Content</th>
+	                        <th>Author</th>
+	                        <th>Created Time</th>
+                    		<th>Updated Time</th>
+                    		<th>Action</th>
+	                    </tr>
+	                </thead>
+	                <tbody>
+
+	                </tbody>
+	            </table>
+	        </div>
+	        <!-- /.table-responsive -->
+	    </div>
+	    <!-- /.panel-body -->
+	</div>
+
+	<script type="text/javascript" src="/static/js/post.js"></script>
+</body>
+</html>
+```
+
+\apps\views\admin\layout\head.ejs
+```
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+```
+
+\apps\views\admin\layout\nav.ejs
+```
+<nav class="navbar navbar-default">
+	<div class="container-fluid">
+		<div class="navbar-header">
+	  		<a class="navbar-brand" href="/admin">Blog Admin</a>
+		</div>
+		<ul class="nav navbar-nav">
+			<li class="blog"><a href="http://localhost:3000/blog">Blog</a></li>
+		 	<li class="active"><a href="admin/post">Posts</a></li>
+		  	<li><a href="admin/users">User</a></li>
+		</ul>
+	</div>
+</nav>
+```
+
+Chạy test thử: http://localhost:3000/admin
 
 

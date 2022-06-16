@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<%- include('layout/head.ejs') %>
+</head>
+<body>
+	<%- include('layout/nav.ejs') %>
+	<div class="row" style="margin-bottom: 10px">
+		<div class="col-md-12">
+			<a href="/admin/post/new" class="btn btn-success pull-right">Add new Post</a>
+		</div>
+	</div>
+
+	<div class="panel panel-default">
+	    <div class="panel-heading">
+	        Post
+	    </div>
+	    <!-- /.panel-heading -->
+	    <div class="panel-body">
+	        <div class="table-responsive">
+	            <table class="table table-striped table-bordered table-hover">
+	                <thead>
+	                    <tr>
+	                        <th>ID</th>
+	                        <th>Title</th>
+	                        <th>Content</th>
+	                        <th>Author</th>
+	                        <th>Created Time</th>
+                    		<th>Updated Time</th>
+                    		<th>Action</th>
+	                    </tr>
+	                </thead>
+	                <tbody>
+
+	                </tbody>
+	            </table>
+	        </div>
+	        <!-- /.table-responsive -->
+	    </div>
+	    <!-- /.panel-body -->
+	</div>
+
+	<script type="text/javascript" src="/static/js/post.js"></script>
+</body>
+</html>
