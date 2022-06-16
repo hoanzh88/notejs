@@ -1,4 +1,4 @@
-### Xây dựng ứng dụng thời gian thực với Nodejs express & mysql
+### Xây dựng ứng dụng thời gian thực với Nodejs express & mysql & socketio
 Khởi tạo cơ bản & cài 1 số module cần thiết:
 ```
 npm init
@@ -246,4 +246,103 @@ router.get("/", function(req, res){
 ```
 
 Test thử: http://localhost:3000/
+
+
+### Form reigster
+Tạo file \apps\views\signup.ejs
+```
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div id="signupbox" style="margin-top:50px" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <div class="panel-title">Sign Up</div>
+                </div>
+                <div class="panel-body" >
+                    <form id="signupform" class="form-horizontal" role="form" method="POST" action="/admin/signup">
+
+                        <div id="signupalert" style=" <% if (!data || !data.error){%> display:none <%}%>" class="alert alert-danger">
+                            <p>Error:</p>
+
+                            <% if (data && data.error) { %>
+                            <span> <%= data.error %> </span>
+                            <%}%>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="email" class="col-md-3 control-label">Email</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" name="email" placeholder="Email Address">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password" class="col-md-3 control-label">Password</label>
+                            <div class="col-md-9">
+                                <input type="password" class="form-control" name="passwd" placeholder="Password">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="repassword" class="col-md-3 control-label">Re-Type</label>
+                            <div class="col-md-9">
+                                <input type="password" class="form-control" name="repasswd" placeholder="Re-Type Password">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="firstname" class="col-md-3 control-label">First Name</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" name="firstname" placeholder="First Name">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastname" class="col-md-3 control-label">Last Name</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" name="lastname" placeholder="Last Name">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <!-- Button -->
+                            <div class="col-md-offset-3 col-md-9">
+                                <input id="btn-signup" type="submit" class="btn btn-info" value="Sign Up" />
+                            </div>
+                        </div>
+
+                    </form>
+                 </div>
+            </div>
+
+         </div>
+    </div>
+
+</body>
+</html>
+```
+
+Thêm router signup \apps\controllers\admin.js
+```
+router.get("/signup", function(req, res){
+	res.render("signup.ejs", {data: {}});
+});
+```
+
+Test thử link: http://localhost:3000/admin/signup
+
+
+
+
+
 

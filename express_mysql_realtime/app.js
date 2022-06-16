@@ -3,7 +3,7 @@ var config = require("config");
 var bodyParser = require("body-parser");
 
 var app = express();
-app.use(bodyParser.urlencoded({ extended: false })); // true: support x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: true })); // true: support x-www-form-urlencoded
 app.use(bodyParser.json());
 
 app.set("views", __dirname+"/apps/views");
