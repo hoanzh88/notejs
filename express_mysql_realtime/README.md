@@ -341,8 +341,71 @@ router.get("/signup", function(req, res){
 
 Test thử link: http://localhost:3000/admin/signup
 
+\app.js
+sửa false thành true để lấy data từ form được
+```
+app.use(bodyParser.urlencoded({ extended: true }));
+```
 
+apps\controllers\admin.js
+```
+const user_model = require("../models/users");
+router.post("/signup", function(req, res){
+	var user = req.body;
 
+	if (user.email.trim().length == 0){
+		res.render("signup.ejs", {data: {error: "Email is require"}});
+	}
 
+	if (user.passwd != user.repasswd && user.passwd.trim().length != 0){
+		res.render("signup.ejs", {data: {error: "password is not match"}});		
+	}
 
+	// insert to DB
+
+});
+```
+Test thử link: http://localhost:3000/admin/signup
+
+apps\controllers\admin.js
+```
+	// insert to DB
+	user = {
+		email: user.email,
+		password: user.passwd, // cần mã hóa mật khẩu
+		first_name: user.firstname,
+		last_name: user.lastname
+	};
+
+	let results = user_model.addUser(user);
+
+	results.then(function(data){
+		res.redirect("/admin/signin");
+	}).catch(function(err){
+		res.render("signup.ejs", {data: {error: "could not insert to DB"}});
+	});
+```
+
+\apps\models\users.js
+```
+function addUser (user){
+     if(user){
+        return new Promise (function(resole, reject){
+            let query = conn.query('INSERT INTO users SET ?', user, function(err, results, fields){
+                if (err){
+                    reject(err);
+                }else{
+                    resole(results.insertId);
+                }
+            });
+        });
+     }else{
+        return false
+     }
+}
+
+user_model.addUser = addUser;
+```
+
+Test insert thử link: http://localhost:3000/admin/signup
 

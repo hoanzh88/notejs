@@ -14,7 +14,24 @@ function getAllUsers(){
         });
 }
 
+function addUser(user){
+     if(user){
+        return new Promise (function(resole, reject){
+            let query = conn.query('INSERT INTO users SET ?', user, function(err, results, fields){
+                if (err){
+                    reject(err);
+                }else{
+                    resole(results.insertId);
+                }
+            });
+        });
+     }else{
+        return false
+     }
+}
+
 const user_model = {};
 user_model.getAllUsers = getAllUsers;
+user_model.addUser = addUser;
 
 module.exports = user_model;
