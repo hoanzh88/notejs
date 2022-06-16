@@ -46,8 +46,10 @@ Tạo folder public (chứa css, images, js)
 app.use("/static", express.static(__dirname+"/public"));
 ```
 
-Test: tạo file css \public\css\main.css
-```http://localhost:3000/static/css/main.css```
+Test: tạo file css \public\css\main.css chạy thử
+```
+http://localhost:3000/static/css/main.css
+```
 
 ### Tạo cấu trúc Mô hình MVC
 Tạo folder apps (chứa controllers, models, views)
@@ -71,6 +73,43 @@ module.exports = router;
 ```
 
 Test thử http://localhost:3000/
+
+\apps\controllers\index.js
+```
+router.use("/admin", require(__dirname+"/admin.js"));
+router.use("/blog", require(__dirname+"/blog.js"));
+```
+
+\apps\controllers\admin.js
+```
+var express = require("express");
+var router = express.Router();
+
+router.get("/", function(req, res){
+	res.json({"message":"this is admin page"});
+});
+
+module.exports = router;
+```
+
+\apps\controllers\blog.js
+```
+var express = require("express");
+var router = express.Router();
+
+router.get("/", function(req, res){
+	res.json({"message":"this is blog page"});
+});
+
+module.exports = router;
+```
+
+Test thử:
+```
+http://localhost:3000/admin
+http://localhost:3000/blog
+```
+
 
 
 
