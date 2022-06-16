@@ -409,7 +409,7 @@ user_model.addUser = addUser;
 
 Test insert thử link: http://localhost:3000/admin/signup
 
-### Mã hóa passwd
+### Mã hóa password
 Cài: 
 npm install bcrypt -save
 npm install bcryptjs -save
@@ -442,7 +442,7 @@ module.exports = {
 	hash_password: hash_password
 }
 ```
-apps\controllers\admin.js
+Sửa lại phần passwd trong apps\controllers\admin.js
 ```
 var helper = require("../helpers/helper.js");
 
@@ -454,5 +454,95 @@ user = {
 		last_name: user.lastname
 	};
 ```
+
+### Login Form
+\apps\views\signin.ejs
+```
+<!DOCTYPE html>
+<html>
+<head>
+	<title> sign in</title>
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</head>
+<body>
+  	<div class="container">    
+        <div class="text-center">
+            <a href="http://gioithieu.sachmem.vn"></a>
+            <img style="margin-top:25px;box-shadow:2px 2px 2px grey;" src="https://www.sachmem.vn/assets/logo-small-522675a1aeaa79606cfbdf29142c86b0c337d5a958be22cbc6a6eb7718d7d28b.png"/>
+            </a>        
+        </div>
+    
+        <div id="loginbox" style="margin-top:25px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">                    
+            <div class="panel panel-info" >
+                <div class="panel-heading">
+                    <div class="panel-title">Đăng nhập</div>
+                        
+
+                <div style="padding-top:30px" class="panel-body" >
+
+                	<% if (data && data.error ) {%>
+
+                    <div id="login-alert" class="alert alert-danger col-sm-12">
+                    	<%= data.error %>
+                    </div>
+
+                    <% } %> 
+                        
+                    <form id="loginform" class="form-horizontal" role="form" method="POST" action="">
+                                
+                        <div style="margin-bottom: 25px" class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                            <input id="login-email" type="text" class="form-control" name="email" value="" placeholder="email">                                        
+                        </div>
+                            
+                        <div style="margin-bottom: 25px" class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                            <input id="login-password" type="password" class="form-control" name="password" placeholder="mật khẩu">
+                        </div>
+                                
+
+                        <div style="margin-top:10px" class="form-group">
+                            <!-- Button -->
+
+                            <div class="col-sm-12 controls">
+                              <input id="btn-login" type="submit" class="btn btn-success" value="login">
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <div class="col-md-12 control">
+                                <div style="border-top: 1px solid#888; padding-top:15px; font-size:85%" >
+                                    Nếu bạn chưa có tài khoản 
+                                	<a href="signup">
+                                    Đăng ký</a>
+                                    hoặc <a id="btn-fblogin" href="#" class="btn btn-primary">Đăng nhập bằng Facebook</a>
+
+                                </div>
+                            </div>
+                        </div>    
+                    </form>     
+                </div>                     
+            </div>  
+        </div>
+     </div>
+</body>
+</html>
+```
+
+\apps\controllers\admin.js
+```
+router.get("/signin", function(req, res){
+	res.render("signin.ejs", {data: {}});
+});
+```
+
+Test thử http://localhost:3000/admin/signin
 
 

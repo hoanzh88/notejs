@@ -45,5 +45,9 @@ router.post("/signup", function(req, res){
 
 });
 
+// SIGNIN
+router.get("/signin", function(req, res){
+	res.render("signin.ejs", {data: {}});
+});
 
 module.exports = router;
