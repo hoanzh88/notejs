@@ -6,6 +6,9 @@ var app = express();
 app.use(bodyParser.urlencoded({ extended: false })); // true: support x-www-form-urlencoded
 app.use(bodyParser.json());
 
+app.set("views", __dirname+"/apps/views");
+app.set("view engine", "ejs"); // cai dat ejs lam engine
+
 // Static
 app.use("/static", express.static(__dirname+"/public"));
 

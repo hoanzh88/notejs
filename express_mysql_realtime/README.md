@@ -54,6 +54,7 @@ http://localhost:3000/static/css/main.css
 ### Tạo cấu trúc Mô hình MVC
 Tạo folder apps (chứa controllers, models, views)
 
+### Controllers
 \app.js
 ```
 var controller = require(__dirname+"/apps/controllers"); 
@@ -110,7 +111,7 @@ http://localhost:3000/admin
 http://localhost:3000/blog
 ```
 
-### Connect Mysql
+### Models
 Config Mysql
 \config\default.json
 ```
@@ -215,3 +216,34 @@ CREATE TABLE `users` (
 ```
 
 Test thử: http://localhost:3000/getallusers
+
+### Views
+\app.js
+```
+app.set("views", __dirname+"/apps/views");
+app.set("view engine", "ejs"); // cai dat ejs lam engine
+```
+
+\apps\controllers\index.js
+```
+router.get("/", function(req, res){
+	// res.json({"message":"this is home page"});
+	res.render("test"); // render file test.ejs sang html de tra ve client
+});
+```
+
+\apps\views\test.ejs
+```
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="/static/css/main.css">
+</head>
+<body>
+	<h1> Welcome EJS engine </h1>
+</body>
+</html>
+```
+
+Test thử: http://localhost:3000/
+

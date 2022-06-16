@@ -6,7 +6,8 @@ router.use("/admin", require(__dirname+"/admin.js"));
 router.use("/blog", require(__dirname+"/blog.js"));
 
 router.get("/", function(req, res){
-	res.json({"message":"this is home page"});
+	// res.json({"message":"this is home page"});
+	res.render("test"); // render file test.ejs sang html de tra ve client
 });
 
 router.get("/getallusers", function(req, res){
