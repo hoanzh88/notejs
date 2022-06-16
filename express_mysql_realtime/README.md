@@ -1,4 +1,4 @@
-# express_mysql_realtime
+### Xây dựng ứng dụng thời gian thực với Nodejs express & mysql
 Khởi tạo cơ bản:
 ```
 npm init
