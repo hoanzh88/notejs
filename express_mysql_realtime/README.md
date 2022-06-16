@@ -1,5 +1,5 @@
 ### Xây dựng ứng dụng thời gian thực với Nodejs express & mysql
-Khởi tạo cơ bản:
+Khởi tạo cơ bản & cài 1 số module cần thiết:
 ```
 npm init
 npm install express --save
@@ -45,9 +45,32 @@ Tạo folder public (chứa css, images, js)
 ```
 app.use("/static", express.static(__dirname+"/public"));
 ```
+
 Test: tạo file css \public\css\main.css
 ```http://localhost:3000/static/css/main.css```
 
+### Tạo cấu trúc Mô hình MVC
+Tạo folder apps (chứa controllers, models, views)
+
+\app.js
+```
+var controller = require(__dirname+"/apps/controllers"); 
+app.use(controller);
+```
+
+\apps\controllers\index.js
+```
+var express = require("express");
+var router = express.Router();
+
+router.get("/", function(req, res){
+	res.json({"message":"this is home page"});
+});
+
+module.exports = router;
+```
+
+Test thử http://localhost:3000/
 
 
 
