@@ -700,7 +700,6 @@ router.get("/", function(req, res){
 	    <!-- /.panel-body -->
 	</div>
 
-	<script type="text/javascript" src="/static/js/post.js"></script>
 </body>
 </html>
 ```
@@ -734,4 +733,78 @@ router.get("/", function(req, res){
 
 Chạy test thử: http://localhost:3000/admin
 
+Model post
+\apps\models\post.js
+```
+var db = require("../common/database.js");
+
+var conn = db.getConnection();
+
+function getAllPost(){
+	return new Promise (function(resole, reject){
+        let sql = "SELECT posts.* FROM posts"
+            let query = conn.query(sql, function(err, posts){
+                if (err){
+                    reject(err);
+                }else{
+                    resole(posts);
+                }
+            });
+        });
+}
+
+module.exports = {
+	getAllPost: getAllPost
+}
+```
+
+\apps\controllers\admin.js
+```
+var post_md = require("../models/post.js");
+
+router.get("/", function(req, res){
+	if (req.session.user){
+		var data = post_md.getAllPost();
+		data.then(function(posts){
+			let data = {
+				posts: posts,
+				error: false
+			}
+
+			// Render trang dashboard và show danh sách bài viêt ra
+			res.render("admin/dashboard.ejs", {data: data});
+		}).catch(function(error){
+			res.render("admin/dashboard.ejs", {data: {error: "Get posts data is error"}});
+		});
+	}else{
+		res.redirect("/admin/signin")
+	}	
+});
+```
+
+\apps\views\admin\dashboard.ejs
+```
+<tbody>
+	<% if (data && data.posts){
+			for (var i =0; i < data.posts.length; i++){
+	%>
+				<tr>
+					<td> <%= data.posts[i].id %></td>
+					<td> <%= data.posts[i].title%></td>
+					<td> <%= data.posts[i].content%></td>
+					<td> <%= data.posts[i].author%></td>
+
+					<td> <%= data.posts[i].created_at%> </td>
+					<td> <%= data.posts[i].updated_at%></td>
+					<td> 
+						<a href="/admin/post/edit/<%= data.posts[i].id %>" class="btn btn-primary"> Edit</a>
+						<button class="btn btn-danger delete_post" id="<%= data.posts[i].id %>">Delete</button>
+					</td>
+				</tr>
+	<%
+			}
+		}
+	%>
+</tbody>
+```
 

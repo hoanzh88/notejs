@@ -2,12 +2,23 @@ var express = require("express");
 var router = express.Router();
 
 const user_model = require("../models/users");
-
+var post_md = require("../models/post.js");
 var helper = require("../helpers/helper.js");
 
 router.get("/", function(req, res){
 	if (req.session.user){
-			res.render("admin/dashboard.ejs", {});	
+		var data = post_md.getAllPost();
+		data.then(function(posts){
+			let data = {
+				posts: posts,
+				error: false
+			}
+
+			// Render trang dashboard và show danh sách bài viêt ra
+			res.render("admin/dashboard.ejs", {data: data});
+		}).catch(function(error){
+			res.render("admin/dashboard.ejs", {data: {error: "Get posts data is error"}});
+		});
 	}else{
 		res.redirect("/admin/signin")
 	}	
