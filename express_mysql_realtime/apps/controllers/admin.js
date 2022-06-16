@@ -3,6 +3,8 @@ var router = express.Router();
 
 const user_model = require("../models/users");
 
+var helper = require("../helpers/helper.js");
+
 router.get("/", function(req, res){
 	res.json({"message":"this is admin page"});
 });
@@ -24,9 +26,11 @@ router.post("/signup", function(req, res){
 	}
 
 	// insert to DB
+	var password = helper.hash_password(user.passwd);
+	
 	user = {
 		email: user.email,
-		password: user.passwd, // cần mã hóa mật khẩu
+		password: password, 
 		first_name: user.firstname,
 		last_name: user.lastname
 	};

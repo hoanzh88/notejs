@@ -409,3 +409,50 @@ user_model.addUser = addUser;
 
 Test insert thử link: http://localhost:3000/admin/signup
 
+### Mã hóa passwd
+Cài: 
+npm install bcrypt -save
+npm install bcryptjs -save
+
+\config\default.json
+```
+	"salt": 10,
+	"secret_key": "secretkey"
+```
+
+tạo folder helpers cho các hàm dùng chung
+\apps\helpers\helper.js
+```
+var bcrypt = require ("bcryptjs");
+var config = require("config");
+
+function hash_password (password){
+	var saltRounds = config.get("salt");
+
+	// generale ra một cái key để lưu pass
+	var salt = bcrypt.genSaltSync(saltRounds);
+
+	// Mã hóa pass thành hash bởi 1 cái key có độ dài là 10
+	var hash = bcrypt.hashSync(password, salt);
+
+	return hash;
+}
+
+module.exports = {
+	hash_password: hash_password
+}
+```
+apps\controllers\admin.js
+```
+var helper = require("../helpers/helper.js");
+
+var password = helper.hash_password(user.passwd);
+user = {
+		email: user.email,
+		password: password, 
+		first_name: user.firstname,
+		last_name: user.lastname
+	};
+```
+
+
