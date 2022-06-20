@@ -1,5 +1,4 @@
-module.exports = function (io){
-	
+module.exports = function (io){	
 	var usernames = [];
 	io.sockets.on("connection", function(socket){
 		console.log("Have a new user connected");
@@ -24,6 +23,25 @@ module.exports = function (io){
 			};
 			socket.broadcast.emit("update_message", data)
 		});
+		
+		// Lắng nghe sự kiện user gửi message lên
+		socket.on("send_message", function(message){
+
+			// notify mysefl và gửi lên chính nó
+			let data = {
+				sender: "You",
+				message: message
+			};
+			socket.emit("update_message", data);
+
+			// Notify other user và gửi thông báo message cho các user khác
+			data = {
+				sender: socket.username,
+				message: message
+			};
+			socket.broadcast.emit("update_message", data)
+		});
+		
 		
 	});
 }

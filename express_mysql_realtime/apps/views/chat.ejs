@@ -54,6 +54,29 @@
 			$("#conversation").append("<li> <b>" + data.sender + ": </b>" + data.message + "</li>");
 
 		});
+				
+		// Không cho gửi form của btn-send nữa để tránh mỗi lần send phải nhập username lại
+		// Làm bằng cách return false luôn khi gửi form lên
+		$("form").submit(function(){
+			return false
+		});
+		
+		// Bắt sự kiện click send message
+		$("#btn-send").click(function(e){
+
+			//Lấy nội dung message ra
+			 let message = $("#message").val();
+
+			 //Reset message này về rỗng
+			 // để sau khi click send thì ô nhập tin nhắn về trống 
+			 // để nhập nội dung chat tiếp theo.
+			 $("#message").val("");
+
+			 // Gửi message lên server
+			 if (message.trim().length != 0) { // Nếu message khác rỗng thì gửi lên server
+			 	socket.emit("send_message", message);
+			 } 
+		});
 		
 	</script>
 </body>

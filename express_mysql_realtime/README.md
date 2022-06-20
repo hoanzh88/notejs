@@ -1867,6 +1867,56 @@ module.exports = function (io){
 }
 ```
 
+### Send message event
+apps\views\chat.ejs
+```
+// Không cho gửi form của btn-send nữa để tránh mỗi lần send phải nhập username lại
+// Làm bằng cách return false luôn khi gửi form lên
+$("form").submit(function(){
+	return false
+});
+		
+// Bắt sự kiện click send message
+$("#btn-send").click(function(e){
+
+	//Lấy nội dung message ra
+	 let message = $("#message").val();
+
+	 //Reset message này về rỗng
+	 // để sau khi click send thì ô nhập tin nhắn về trống 
+	 // để nhập nội dung chat tiếp theo.
+	 $("#message").val("");
+
+	 // Gửi message lên server
+	 if (message.trim().length != 0) { // Nếu message khác rỗng thì gửi lên server
+		socket.emit("send_message", message);
+	 } 
+});
+```
+
+apps\common\socketcontrol.js
+```
+// Lắng nghe sự kiện user gửi message lên
+socket.on("send_message", function(message){
+	// notify mysefl và gửi lên chính nó
+	let data = {
+		sender: "You",
+		message: message
+	};
+
+	socket.emit("update_message", data);
+
+	// Notify other user và gửi thông báo message cho các user khác
+	data = {
+		sender: socket.username,
+		message: message
+	};
+	socket.broadcast.emit("update_message", data)
+});
+```
+
+
+
 
 
 
