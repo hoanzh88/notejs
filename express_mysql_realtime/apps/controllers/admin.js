@@ -191,5 +191,29 @@ router.put("/post/edit", function(req, res){
 	}
 });
 
+router.delete("/post/delete", function(req, res){
+	let id = req.body.id;
+
+	let data_db = post_md.deletePost(id);
+
+	if(!data_db){
+		res.json({
+			code: 500,
+			message: "Error DB"
+		});
+	}else{
+		data_db.then(function(results){
+			res.json({
+				code: 200,
+				message: "delete success"
+			});
+		}).catch(function(error){
+			res.json({
+				code: 500,
+				message: "Error DB 2"
+			});
+		});
+	}
+});
 
 module.exports = router;

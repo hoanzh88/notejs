@@ -1075,3 +1075,84 @@ updatePost: updatePost,
 Chạy test update thử
 
 
+### Delete post
+\apps\controllers\admin.js
+```
+router.delete("/post/delete", function(req, res){
+	let id = req.body.id;
+
+	let data_db = post_md.deletePost(id);
+
+	if(!data_db){
+		res.json({
+			code: 500,
+			message: "Error DB"
+		});
+	}else{
+		data_db.then(function(results){
+			res.json({
+				code: 200,
+				message: "delete success"
+			});
+		}).catch(function(error){
+			res.json({
+				code: 500,
+				message: "Error DB 2"
+			});
+		});
+	}
+});
+```
+
+apps\models\post.js
+```
+function deletePost(id){
+	if (id){
+		return new Promise (function(resole, reject){
+            let query = conn.query('DELETE FROM posts WHERE id=?', [id], function(err, results, fields){
+                if (err){
+                    reject(err);
+                }else{
+                    resole(results);
+                }
+            });
+        });
+     }else{
+        return false
+	}
+}
+
+deletePost: deletePost
+```
+
+\public\js\post.js
+```
+	$(".delete_post").click(function(){
+		var post_id = $(this).attr("id");
+
+		var body= {
+			id: post_id
+		}
+
+		var base_url = location.protocol + "//" + document.domain + ":" + location.port;
+		var url_delete = base_url + "/admin/post/delete"
+
+		$.ajax({
+			url: url_delete,
+			type: "DELETE",
+			data: body,
+			dataType: "json",
+			success: function(res){
+				console.log(res);
+				if (res.code == 200){
+					location.reload();
+				}else{
+					alert("loi, fucking bug");
+				}
+			}
+		});
+	});
+```
+
+Chạy test delete xem kết quả
+

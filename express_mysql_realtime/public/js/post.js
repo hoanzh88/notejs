@@ -30,8 +30,33 @@ function bindEvents(){
 			}
 		});
 	});
+	
+	$(".delete_post").click(function(){
+		var post_id = $(this).attr("id");
 
+		var body= {
+			id: post_id
+		}
 
+		var base_url = location.protocol + "//" + document.domain + ":" + location.port;
+		var url_delete = base_url + "/admin/post/delete"
+
+		$.ajax({
+			url: url_delete,
+			type: "DELETE",
+			data: body,
+			dataType: "json",
+			success: function(res){
+				console.log(res);
+				if (res.code == 200){
+					location.reload();
+				}else{
+					alert("loi, fucking bug");
+				}
+			}
+		});
+	});
+	
 }
 
 $(document).ready(function(){

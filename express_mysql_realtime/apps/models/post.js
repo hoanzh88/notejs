@@ -62,9 +62,27 @@ function updatePost(params){
      }
 }
 
+function deletePost(id){
+	if (id){
+		return new Promise (function(resole, reject){
+            let query = conn.query('DELETE FROM posts WHERE id=?', [id], function(err, results, fields){
+                if (err){
+                    reject(err);
+                }else{
+                    resole(results);
+                }
+            });
+        });
+     }else{
+        return false
+	}
+}
+
+
 module.exports = {
 	getAllPost: getAllPost,
 	addPost: addPost,
 	getPostById: getPostById,
-	updatePost: updatePost
+	updatePost: updatePost,
+	deletePost: deletePost
 }
