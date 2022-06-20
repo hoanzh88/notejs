@@ -15,6 +15,25 @@ function getAllPost(){
         });
 }
 
+
+function addPost(params){
+	if(params){
+        return new Promise (function(resole, reject){
+            let query = conn.query('INSERT INTO posts SET ?', params, function(err, results, fields){
+                if (err){
+                    reject(err);
+                }else{
+                    resole(results);
+                }
+            });
+        });
+     }else{
+        return false
+     }
+}
+
+
 module.exports = {
-	getAllPost: getAllPost
+	getAllPost: getAllPost,
+	addPost: addPost
 }

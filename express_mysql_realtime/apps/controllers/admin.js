@@ -96,4 +96,41 @@ router.post("/signin", function(req, res){
 });
 
 
+// ADD NEW POST
+router.get("/post/new", function(req, res){
+	if (req.session.user){
+		res.render("admin/post/new.ejs", {data: {error: false}});
+	}else{
+		res.redirect("/admin/signin")
+	}
+	
+});
+
+router.post("/post/new", function(req,res){
+	var params = req.body;
+	
+	if (params.title.trim().length == 0){
+		let data = {
+			error: "Please enter the title of new post"
+		}
+		res.render("admin/post/new.ejs", {data: data});
+
+	}else{
+		params.created_at = new Date();
+	 	params.updated_at = new Date();
+		let data = post_md.addPost(params);
+
+		data.then(function(data){
+			res.redirect("/admin");
+		}).catch(function(err){
+			let data = {
+				error: false
+			};
+			res.render("admin/post/new.ejs", {data: data});
+		});
+	}	 
+});
+
+
+
 module.exports = router;

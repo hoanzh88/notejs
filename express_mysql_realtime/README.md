@@ -808,3 +808,123 @@ router.get("/", function(req, res){
 </tbody>
 ```
 
+### Chức năng add new post
+\apps\controllers\admin.js
+```
+router.get("/post/new", function(req, res){
+	if (req.session.user){
+		res.render("admin/post/new.ejs", {data: {error: false}});
+	}else{
+		res.redirect("/admin/signin")
+	}
+	
+});
+```
+
+\apps\views\admin\post\new.ejs
+```
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<%- include('../layout/head.ejs') %>
+	<script src="https://cloud.tinymce.com/stable/tinymce.min.js"></script>
+  	<script>tinymce.init({ selector:'textarea' });</script>
+</head>
+<body>
+	<div class="container">
+		<%- include('../layout/nav.ejs') %>
+		<div class="panel panel-default">
+            <div class="panel-heading">
+                Add new Post
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-lg-6">
+
+                    	<% if (data && data.error ) {%>
+	           			 	<div id="login-alert" class="alert alert-danger col-sm-12">
+	                    		<%= data.error %>
+	                		</div>
+                    	<% } %> 
+
+                        <form role="form" method="POST" action="/admin/post/new">
+                            <div class="form-group">
+                                <label>Title</label>
+                                <input class="form-control" name="title" placeholder="Title">
+                            </div>
+                            <div class="form-group">
+                                <label>Content</label>
+                                <textarea class="form-control" name="content" placeholder="Content"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Author</label>
+                                <input class="form-control" name="author" placeholder="Author">
+                            </div>
+                            <input type="submit" name="" value="add" class="btn btn-success">
+                        </form>
+                    </div>
+                    <!-- /.col-lg-6 (nested) -->
+                </div>
+                <!-- /.row (nested) -->
+            </div>
+            <!-- /.panel-body -->
+        </div>
+	</div>
+</body>
+</html>
+```
+--> Chạy xem form html
+
+\apps\controllers\admin.js
+```
+router.post("/post/new", function(req,res){
+	var params = req.body;
+	
+	if (params.title.trim().length == 0){
+		let data = {
+			error: "Please enter the title of new post"
+		}
+		res.render("admin/post/new.ejs", {data: data});
+
+	}else{
+		params.created_at = new Date();
+	 	params.updated_at = new Date();
+		let data = post_md.addPost(params);
+
+		data.then(function(data){
+			res.redirect("/admin");
+		}).catch(function(err){
+			let data = {
+				error: false
+			};
+			res.render("admin/post/new.ejs", {data: data});
+		});
+	}	 
+});
+```
+
+\apps\models\post.js
+```
+function addPost(params){
+	if(params){
+        return new Promise (function(resole, reject){
+            let query = conn.query('INSERT INTO posts SET ?', params, function(err, results, fields){
+                if (err){
+                    reject(err);
+                }else{
+                    resole(results);
+                }
+            });
+        });
+     }else{
+        return false
+     }
+}
+
+addPost: addPost,
+```
+--> Chạy test insert xem có vào database
+
+
+
