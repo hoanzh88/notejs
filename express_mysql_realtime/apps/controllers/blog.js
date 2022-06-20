@@ -45,4 +45,8 @@ router.get("/post/:id", function(req, res){
 	});
 });
 
+router.get("/about", function(req, res){
+	res.render("blog/about.ejs");
+});
+
 module.exports = router;
