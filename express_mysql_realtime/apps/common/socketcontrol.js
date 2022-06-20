@@ -42,6 +42,23 @@ module.exports = function (io){
 			socket.broadcast.emit("update_message", data)
 		});
 		
+		// Lắng nghe sự kiện user disconnect
+		socket.on("disconnect", function(){
+
+			// Xóa cái user vừa disconnect này đi
+			for (let i = 0; i < usernames.length;i++ ){
+				if (usernames[i] == socket.username ){
+					usernames.splice(i, 1);
+				}
+			}
+
+			// Thông báo tới mọi người user này vừa thoát
+			let data = {
+				sender: "SERVER",
+				message: socket.username + " have leave chat room"
+			};
+			socket.broadcast.emit("update_message", data);
+		});
 		
 	});
 }
