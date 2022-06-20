@@ -1723,3 +1723,91 @@ apps\views\blog\about.ejs
 </html>
 ```
 
+### SoketIO
+```
+npm install socket.io --save
+```
+
+app.js
+```
+var socketio = require("socket.io");
+
+var server = app.listen(port, host, function(){
+	console.log("app is running on port", port);
+});
+
+var io = socketio(server);
+```
+
+Chạy thử 
+
+### Chức năng chat
+apps\controllers\index.js
+```
+router.get("/chat", function(req, res){
+	res.render("chat.ejs");
+});
+```
+
+\apps\views\chat.ejs
+```
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Chat Application</title>
+	<%- include('admin/layout/head.ejs') %>
+	<style type="text/css">
+		* { margin: 0; padding: 0; box-sizing: border-box; } 
+	      body { font: 13px Helvetica, Arial; }
+	      form { background: #000; padding: 3px; position: fixed; bottom: 40px; width: 90%; }
+	      form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+	      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+	      #messages { list-style-type: none; margin: 0; padding: 0; }
+	      #messages li { padding: 5px 10px; }
+	      #messages li:nth-child(odd) { background: #eee; }
+	</style>
+</head>
+<body>
+	<div class="container">
+
+		<!-- Tạo 1 hàng để nhập text chat -->
+		<ul id="conversation">
+			
+		</ul>
+		<form>
+			<!-- Tạo ô input để nhập nội dung chat -->
+			<input type="text" name="message" id="message">
+			<!-- Tạo nut button để send -->
+			<button class="btn btn-success" id="btn-send">Send</button>
+		</form>
+	</div>
+</body>
+</html>
+```
+### Xử lý logic
+app.js
+```
+var socketcontrol = require("./apps/common/socketcontrol.js")(io);
+```
+
+apps\common\socketcontrol.js
+```
+module.exports = function (io){
+	io.sockets.on("connection", function(socket){
+		console.log("Have a new user connected");
+	});
+}
+```
+
+\apps\views\chat.ejs
+```
+<script src="https://cdn.socket.io/4.5.0/socket.io.js"></script>
+
+<script type="text/javascript">
+	let socket = io.connect("http://localhost:3000/");
+</script>
+```
+
+
+
+

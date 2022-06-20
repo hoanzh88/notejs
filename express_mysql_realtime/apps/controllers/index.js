@@ -25,4 +25,9 @@ router.get("/getallusers", function(req, res){
 	});
 });
 
+router.get("/chat", function(req, res){
+	res.render("chat.ejs");
+});
+
+
 module.exports = router;
