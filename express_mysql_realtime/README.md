@@ -1156,3 +1156,91 @@ deletePost: deletePost
 
 Chạy test delete xem kết quả
 
+### Menu User
+apps\controllers\admin.js
+```
+// USER
+router.get("/users", function(req, res){
+	if (req.session.user){
+		let data = user_model.getAllUsers();
+		data.then(function(users){
+			let data = {
+				users: users,
+				error: false
+			}
+			res.render("admin/users.ejs", {data: data});
+		}).catch(function(error){
+			let data = {
+				error: "could not get user info"
+			}
+			res.render("admin/users.ejs", {data: data});
+		});
+	}else{
+		res.redirect("/admin/signin")
+	}
+	
+
+});
+```
+
+apps\views\admin\users.ejs
+```
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+
+	<%- include('layout/head.ejs') %>
+</head>
+<body>
+	<%- include('layout/nav.ejs') %>
+
+	<div class="panel panel-default">
+	    <div class="panel-heading">
+	        Users
+	    </div>
+	    <!-- /.panel-heading -->
+	    <div class="panel-body">
+	        <div class="table-responsive">
+	            <table class="table table-striped table-bordered table-hover">
+	                <thead>
+	                    <tr>
+	                        <th>ID</th>
+	                        <th>Email</th>
+	                        <th>First Name</th>
+	                        <th>Last Name</th>
+	                        <th>Created Time</th>
+                    		<th>Updated Time</th>
+	                    </tr>
+	                </thead>
+	                <tbody>
+	                    <% if (data && data.users){
+	                    		for (var i =0; i < data.users.length; i++){
+                		%>
+                					<tr>
+                						<td> <%= data.users[i].id %></td>
+                						<td> <%= data.users[i].email%></td>
+                						<td> <%= data.users[i].first_name%></td>
+                						<td> <%= data.users[i].last_name%></td>
+                						<td> <%= data.users[i].created_at%> </td>
+                						<td> <%= data.users[i].updated_at%></td>
+                					</tr>
+    					<%
+	                    		}
+	                    	}
+	                    %>
+
+	                </tbody>
+	            </table>
+	        </div>
+	        <!-- /.table-responsive -->
+	    </div>
+	    <!-- /.panel-body -->
+	</div>
+
+</body>
+</html>
+```
+
+Chạy xem kết quả trang user
+

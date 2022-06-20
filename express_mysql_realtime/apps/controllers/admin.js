@@ -216,4 +216,27 @@ router.delete("/post/delete", function(req, res){
 	}
 });
 
+// USER
+router.get("/users", function(req, res){
+	if (req.session.user){
+		let data = user_model.getAllUsers();
+		data.then(function(users){
+			let data = {
+				users: users,
+				error: false
+			}
+			res.render("admin/users.ejs", {data: data});
+		}).catch(function(error){
+			let data = {
+				error: "could not get user info"
+			}
+			res.render("admin/users.ejs", {data: data});
+		});
+	}else{
+		res.redirect("/admin/signin")
+	}
+	
+
+});
+
 module.exports = router;
