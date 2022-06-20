@@ -1808,6 +1808,67 @@ module.exports = function (io){
 </script>
 ```
 
+### Show message
+
+apps\views\chat.ejs
+```
+<script type="text/javascript">	
+	let socket = io.connect("http://localhost:3000");
+	
+	// Thông báo đã kết nối được ở phía client
+	socket.on("connect", function(){
+		console.log("User is conecting");
+
+		// Hỏi tên của người dùng
+		let username = prompt("What is your name");
+
+		// Gửi tên này lên server. Trong socket dùng hàm emit để gửi
+		socket.emit("addUser", username);
+	});
+	
+	// LẮng nghe sự kiện update_user
+	socket.on("update_message", function(data){
+		$("#conversation").append("<li> <b>" + data.sender + ": </b>" + data.message + "</li>");
+
+	});
+	
+</script>
+```
+
+apps\common\socketcontrol.js
+```
+module.exports = function (io){	
+	var usernames = [];
+	io.sockets.on("connection", function(socket){
+		console.log("Have a new user connected");
+		
+		// LẮng nghe sự kiện addUser bên chat.ejs
+		socket.on("addUser", function(username){
+			// Lưu tên này lại
+			socket.username = username;
+			usernames.push(username);
+
+			// notyfi myself và gửi lên chính nó 
+			let data = {
+				sender: "SERVER",
+				message : "You have join chat room"
+			};
+			socket.emit("update_message", data);
+
+			// Gửi thông báo tới toàn mọi người rằng người này đã join phòng chát
+			data = {
+				sender: "SERVER",
+				message: username + " have join chat room"
+			};
+			socket.broadcast.emit("update_message", data)
+		});
+		
+	});
+}
+```
+
+
+
 
 
 

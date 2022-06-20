@@ -38,6 +38,23 @@
 	<script type="text/javascript">	
 		let socket = io.connect("http://localhost:3000");
 		
+		// Thông báo đã kết nối được ở phía client
+		socket.on("connect", function(){
+			console.log("User is conecting");
+
+			// Hỏi tên của người dùng
+			let username = prompt("What is your name");
+
+			// Gửi tên này lên server. Trong socket dùng hàm emit để gửi
+			socket.emit("addUser", username);
+		});
+		
+		// LẮng nghe sự kiện update_user
+		socket.on("update_message", function(data){
+			$("#conversation").append("<li> <b>" + data.sender + ": </b>" + data.message + "</li>");
+
+		});
+		
 	</script>
 </body>
 </html>
