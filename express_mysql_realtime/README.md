@@ -926,5 +926,152 @@ addPost: addPost,
 ```
 --> Chạy test insert xem có vào database
 
+### Chức năng edit post
+apps\controllers\admin.js
+```
+// Edit post form
+router.get("/post/edit/:id", function(req, res){
+	if (req.session.user){
+		let id = req.params.id; // Params
+		// let id = req.query.id; // Query
+
+		let data_db = post_md.getPostById(id);
+
+		data_db.then(function(posts){
+			let post = posts[0];
+
+			let data_view_edit = {
+				post: post,
+				error: false
+			};
+
+			res.render("admin/post/edit", {data_view_edit: data_view_edit});
+		}).catch(function(err){
+			let data_view_edit = {
+				error: "Could not get post data with id = " + id
+			};
+
+			res.render("admin/post/edit", {data_view_edit: data_view_edit});
+		});
+	}else{
+		res.redirect("/admin/signin")
+	}	
+});
+```
+
+\apps\models\post.js
+```
+function getPostById(id){
+	return new Promise (function(resole, reject){
+            let query = conn.query('SELECT * FROM posts WHERE ?', {id: id}, function(err, posts){
+                if (err){
+                    reject(err);
+                }else{
+                    resole(posts);
+                }
+            });
+        });	
+}
+
+getPostById: getPostById,
+```
+
+apps\views\admin\post\edit.ejs
+```
+
+```
+Dùng ajax để tạo put method
+\public\js\post.js
+```
+function bindEvents(){
+	$(".btn_update").click(function(){
+
+		var id = $(".id_cl").val();
+		var title = $(".title_cl").val();
+		var content = tinymce.get("content").getContent();
+		var author = $(".author_cl").val();
+
+		var body = {
+			id: id,
+			title: title,
+			content: content,
+			author: author
+		};
+		
+		var base_url = location.protocol + "//" + document.domain + ":" + location.port;
+		var url_update = base_url + "/admin/post/edit" 
+		$.ajax({
+			url: url_update,
+			type: "PUT",
+			data: body,
+			dataType: "json",
+			success: function(res){
+				console.log(res);
+				if(res.code == 200){
+					location.reload();
+				}else{
+					alert("Loi, fucking bug");
+				}
+			}
+		});
+	});
+}
+
+$(document).ready(function(){
+	bindEvents();
+});
+
+```
+
+apps\controllers\admin.js
+```
+router.put("/post/edit", function(req, res){
+	let params = req.body;
+
+	let data_db = post_md.updatePost(params);
+	if(!data_db){
+		res.json({
+			code: 500,
+			message: "Error DB"
+		});
+	}else{
+		data_db.then(function(results){
+			res.json({
+				code: 200,
+				message: "success"
+			});
+		}).catch(function(error){
+			res.json({
+				code: 500,
+				message: "Error DB 2"
+			});
+		});
+	}
+});
+```
+
+apps\models\post.js
+```
+function updatePost(params){
+	if(params){
+        return new Promise (function(resole, reject){
+            let query = conn.query('UPDATE posts SET title = ?, content = ?, author = ?, updated_at = ? WHERE id = ?', 
+            	[params.title, params.content, params.author, new Date(), params.id], function(err, results, fields){
+                if (err){
+                    reject(err);
+                }else{
+                    resole(results);
+                }
+            });
+        });
+     }else{
+        return false
+     }
+}
+
+updatePost: updatePost,
+```
+
+Chạy test update thử
 
 

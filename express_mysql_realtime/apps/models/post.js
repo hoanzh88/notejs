@@ -33,7 +33,38 @@ function addPost(params){
 }
 
 
+function getPostById(id){
+	return new Promise (function(resole, reject){
+            let query = conn.query('SELECT * FROM posts WHERE ?', {id: id}, function(err, posts){
+                if (err){
+                    reject(err);
+                }else{
+                    resole(posts);
+                }
+            });
+        });	
+}
+
+function updatePost(params){
+	if(params){
+        return new Promise (function(resole, reject){
+            let query = conn.query('UPDATE posts SET title = ?, content = ?, author = ?, updated_at = ? WHERE id = ?', 
+            	[params.title, params.content, params.author, new Date(), params.id], function(err, results, fields){
+                if (err){
+                    reject(err);
+                }else{
+                    resole(results);
+                }
+            });
+        });
+     }else{
+        return false
+     }
+}
+
 module.exports = {
 	getAllPost: getAllPost,
-	addPost: addPost
+	addPost: addPost,
+	getPostById: getPostById,
+	updatePost: updatePost
 }

@@ -95,6 +95,14 @@ router.post("/signin", function(req, res){
 	}
 });
 
+// DASHBOARD
+router.get("/post", function(req, res){
+	if (req.session.user){
+		res.redirect("/admin");
+	}else{
+		res.redirect("/admin/signin");
+	}
+});
 
 // ADD NEW POST
 router.get("/post/new", function(req, res){
@@ -131,6 +139,57 @@ router.post("/post/new", function(req,res){
 	}	 
 });
 
+// Edit post form
+router.get("/post/edit/:id", function(req, res){
+	if (req.session.user){
+		let id = req.params.id; // Params
+		// let id = req.query.id; // Query
+
+		let data_db = post_md.getPostById(id);
+
+		data_db.then(function(posts){
+			let post = posts[0];
+
+			let data_view_edit = {
+				post: post,
+				error: false
+			};
+
+			res.render("admin/post/edit", {data_view_edit: data_view_edit});
+		}).catch(function(err){
+			let data_view_edit = {
+				error: "Could not get post data with id = " + id
+			};
+
+			res.render("admin/post/edit", {data_view_edit: data_view_edit});
+		});
+	}else{
+		res.redirect("/admin/signin")
+	}	
+});
+router.put("/post/edit", function(req, res){
+	let params = req.body;
+
+	let data_db = post_md.updatePost(params);
+	if(!data_db){
+		res.json({
+			code: 500,
+			message: "Error DB"
+		});
+	}else{
+		data_db.then(function(results){
+			res.json({
+				code: 200,
+				message: "success"
+			});
+		}).catch(function(error){
+			res.json({
+				code: 500,
+				message: "Error DB 2"
+			});
+		});
+	}
+});
 
 
 module.exports = router;
