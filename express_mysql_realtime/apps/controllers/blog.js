@@ -23,4 +23,26 @@ router.get("/", function(req, res){
 	});
 });
 
+
+router.get("/post/:id", function(req, res){
+	let id = req.params.id;
+
+	let data = post_md.getPostById(id);
+
+	data.then(function(posts){
+		let post = posts[0];
+
+		let result = {
+			post: post,
+			error: false
+		};
+		res.render("blog/post.ejs", {data: result});
+	}).catch(function(error){
+		let result = {
+			error: "Could not get post detail"
+		};
+		res.render("blog/post.ejs", {data: result});
+	});
+});
+
 module.exports = router;
