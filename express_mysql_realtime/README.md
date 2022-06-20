@@ -1937,9 +1937,16 @@ socket.on("disconnect", function(){
 });
 ```
 
-
-
-
+### Bắt sự kiện enter để send nội dung chat
+apps\views\chat.ejs
+```
+$("#message").keypress(function(e){
+	// Lấy mã của sự kiện. Mỗi phím đều có 1 cái mã số. Nút enter có mã là 13
+	if (e.wich == 13){
+		$("#btn-send").trigger("click"); // Nếu click enter thì sẽ trigger lại sự kiện btn-send
+	}
+});
+```
 
 
 
