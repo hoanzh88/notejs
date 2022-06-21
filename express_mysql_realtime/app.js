@@ -3,7 +3,6 @@ var config = require("config");
 var bodyParser = require("body-parser");
 var session = require("express-session");
 
-// var socketio = require("socket.io");
 var socketio = require("socket.io");
 
 
@@ -36,5 +35,16 @@ var server = app.listen(port, host, function(){
 	console.log("app is running on port", port);
 });
 
-var io = socketio(server);
+// var io = socketio(server);
+const io = socketio(server, {
+  cors: {
+    origin: '*',
+  }
+});
+
+// const io = require('socket.io')(server, {
+  // cors: {
+    // origin: '*',
+  // }
+// });
 var socketcontrol = require("./apps/common/socketcontrol.js")(io);

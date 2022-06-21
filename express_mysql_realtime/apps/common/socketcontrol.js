@@ -1,5 +1,7 @@
 module.exports = function (io){	
 	var usernames = [];
+	// var post_md = require("../models/post.js");
+	
 	io.sockets.on("connection", function(socket){
 		console.log("Have a new user connected");
 		
@@ -16,6 +18,21 @@ module.exports = function (io){
 			};
 			socket.emit("update_message", data);
 
+			// Xử lý json respon
+			// let data_post = post_md.getPostById(2);			
+			// data_post.then(function(posts){
+				// let post = posts[0];
+
+				// let result = {
+					// post: post,
+					// error: false
+				// };
+				// socket.emit("update_message", result);
+			// }).catch(function(error){
+				
+			// });
+	
+	
 			// Gửi thông báo tới toàn mọi người rằng người này đã join phòng chát
 			data = {
 				sender: "SERVER",

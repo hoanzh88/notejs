@@ -2,9 +2,6 @@
 <html>
 <head>
 	<title>Chat Application</title>
-
-	<%- include('admin/layout/head.ejs') %>
-
 	<style type="text/css">
 
 			* { margin: 0; padding: 0; box-sizing: border-box; } 
@@ -16,6 +13,13 @@
 	      #messages li { padding: 5px 10px; }
 	      #messages li:nth-child(odd) { background: #eee; }
 	</style>
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
+	<!-- jQuery library -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+	<!-- Latest compiled JavaScript -->
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 </head>
 <body>
 	<div class="container">
@@ -37,7 +41,7 @@
 
 	<script type="text/javascript">	
 		let socket = io.connect("http://localhost:3000");
-		
+		<!-- var socket = io.connect('https://localhost:3000', { transports : ['websocket', 'polling'] }); -->
 		// Thông báo đã kết nối được ở phía client
 		socket.on("connect", function(){
 			console.log("User is conecting");
